@@ -1,0 +1,31 @@
+print("Enter your name")
+let name=readLine()!
+print("Enter your nickname")
+let nickname=readLine()
+print("Enter your age")
+let age=Int(readLine()!)!
+print("Enter your city")
+let city=readLine()!
+print("Enter your hobbies")
+let hobbies=readLine()!.split(separator: ",").map{String($0)}
+func introduce(){
+
+    print("Hello, welcome to your profile page!")
+}
+introduce()
+print("name: \(name)")
+if let nickname = nickname, !nickname.isEmpty{
+    print("nickname: \(nickname)")
+}
+else{
+    print("nickname: N/A" )
+}
+print("""
+age: \(age)
+city: \(city)
+""")
+print("hobbies: ", terminator: "")
+
+for i in 0..<hobbies.count{
+    print("\(hobbies[i])", terminator: i==hobbies.count-1 ? "" : ", ")
+}
