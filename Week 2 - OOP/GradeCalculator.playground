@@ -1,0 +1,100 @@
+import Foundation
+enum Grade{
+    case A,B,C,D,F
+}
+
+struct Student{
+    var name:String
+    var scores:[Int]
+    var average: Double {
+        Double((scores.reduce(0){$0+$1}))/Double(scores.count)
+    }
+    var grade:Grade{
+        switch average{
+            case 0..<60:
+            return .F  
+            case 60..<70:
+            return .D 
+            case 70..<80:
+            return .C 
+            case 80..<90:
+            return .B 
+            case 90...100:
+            return .A
+            default:
+            return .F
+
+        }
+    }
+}
+ enum InvalidScore:Error{
+    case Negative
+    case TooHigh
+    case NotInteger
+    case NoScores
+ }
+ func scoreChecker(scores:[Int?]) throws -> [Int]{
+    guard !scores.isEmpty else{
+        throw InvalidScore.NoScores
+    }
+    var res:[Int]=[]
+    for i in scores{
+        guard i != nil else{
+            throw InvalidScore.NotInteger
+        }
+        guard i! <= 100 else{
+            throw InvalidScore.TooHigh
+        }
+        guard i! >= 0 else{
+            throw InvalidScore.Negative
+        }
+        res.append(i!)
+        }
+        return res
+        
+    }
+
+var list:[Student]=[]
+print("enter the number of students")
+var n=Int(readLine()!)!
+for i in 1...n{
+    print("Enter Student \(i) name")
+    var name=readLine()!
+    var j=0
+    while j != 1{
+    print("Enter Student \(i) scores as a comma separated list")
+    var scores = readLine()!.split(separator: ",").map { Int($0.trimmingCharacters(in: .whitespaces)) }
+    do{
+        var result=try scoreChecker(scores:scores)
+        var student = Student(name:name,scores:result)
+        list.append(student)
+        j=1
+        print("Student \(i) created successfully")
+    }
+    catch InvalidScore.Negative{
+        print("negative scores are not allowed")
+    }
+    catch InvalidScore.TooHigh{
+        print("scores above 100 are not allowed")
+    }
+    catch InvalidScore.NotInteger{
+        print("scores entered must only contain numbers no characters")
+    }
+    catch InvalidScore.NoScores{
+        print("scores must be entered")
+    }
+    catch{
+        print("Unknown Error")
+    } 
+    }  
+}
+print("The grades of the students in your class are:")
+for i in list{
+    print("\(i.name) : \(i.grade)")
+}
+var Alist = list.filter{$0.grade == .A}
+var topPerformers=Alist.map{$0.name}
+print("These are the top performers in your class: ", terminator:"")
+for i in 0..<topPerformers.count{
+    print("\(topPerformers[i])", terminator: i==topPerformers.count-1 ? "" : ", ")
+}
